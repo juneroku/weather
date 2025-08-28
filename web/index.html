@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-  <style>
+  <style> 
     :root { color-scheme: light dark; }
     .glass { backdrop-filter: saturate(180%) blur(12px); background: color-mix(in oklab, white 60%, transparent); }
     @media (prefers-color-scheme: dark) {
@@ -17,14 +17,15 @@
     }
   </style>
   <script>
-    window.WEATHER_API_BASE = "http://192.168.1.38:8080/api";
+    window.WEATHER_API_BASE = "http://10.13.1.220:8080/api";
   </script>
 </head>
 <body class="min-h-full bg-gradient-to-b from-sky-50 to-indigo-50 dark:from-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100">
   <header class="sticky top-0 z-30 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/70 dark:bg-slate-900/50 glass">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <span class="text-2xl">🌤️</span>
+        <img src="https://static.wikia.nocookie.net/kimetsu-no-yaiba/images/0/07/Tanjiro_colored_body_4.png/revision/latest?cb=20230117091004" 
+          alt="Tanjiro" class="w-8 h-8 rounded-full shadow-lg" />
         <h1 class="text-xl md:text-2xl font-bold tracking-tight">Weather Now</h1>
         <span id="status-pill" class="ml-2 text-xs px-2 py-1 rounded-full bg-slate-200 dark:bg-slate-800">Connecting…</span>
       </div>
