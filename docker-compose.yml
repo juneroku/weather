@@ -1,0 +1,40 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: weather-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+
+  collector:
+    build: ./collector
+    container_name: weather-collector
+    environment:
+      MONGO_URI: mongodb://mongo:27017/weatherdb
+      LAT: "13.7563"
+      LON: "100.5018"
+      INTERVAL_CRON: "*/15 * * * *"
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    container_name: weather-api
+    environment:
+      MONGO_URI: mongodb://mongo:27017/weatherdb
+    expose:
+      - "3000"
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    container_name: weather-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    restart: unless-stopped

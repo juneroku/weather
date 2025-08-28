@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="th" class="h-full scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🌤️ Weather Now — Public Dashboard</title>
+  <meta name="description" content="Real-time weather dashboard powered by Open-Meteo" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌤️</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <style>
+    :root { color-scheme: light dark; }
+    .glass { backdrop-filter: saturate(180%) blur(12px); background: color-mix(in oklab, white 60%, transparent); }
+    @media (prefers-color-scheme: dark) {
+      .glass { background: color-mix(in oklab, #0b1220 60%, transparent); }
+    }
+  </style>
+  <script>
+    window.WEATHER_API_BASE = "http://192.168.1.38:8080/api";
+  </script>
+</head>
+<body class="min-h-full bg-gradient-to-b from-sky-50 to-indigo-50 dark:from-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100">
+  <header class="sticky top-0 z-30 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/70 dark:bg-slate-900/50 glass">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🌤️</span>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight">Weather Now</h1>
+        <span id="status-pill" class="ml-2 text-xs px-2 py-1 rounded-full bg-slate-200 dark:bg-slate-800">Connecting…</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="https://open-meteo.com/" target="_blank" class="text-xs underline opacity-70 hover:opacity-100">Data: Open‑Meteo</a>
+        <button id="toggle-theme" class="text-xs px-3 py-1 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">Toggle Theme</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+    <section class="rounded-2xl glass p-6 ring-1 ring-slate-900/5 dark:ring-white/10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-semibold">สถานะอากาศปัจจุบัน</h2>
+          <p class="text-sm opacity-80">อัปเดตเรียลไทม์จากพิกัดที่กำหนด</p>
+        </div>
+        <div class="text-sm opacity-80">
+          <span id="last-updated">กำลังโหลด…</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+        <div class="rounded-2xl p-5 bg-white/70 dark:bg-slate-900/60 ring-1 ring-slate-900/5 dark:ring-white/10">
+          <div class="text-sm opacity-70">อุณหภูมิ</div>
+          <div class="text-4xl font-semibold"><span id="temp">—</span><span class="text-base ml-1">°C</span></div>
+        </div>
+        <div class="rounded-2xl p-5 bg-white/70 dark:bg-slate-900/60 ring-1 ring-slate-900/5 dark:ring-white/10">
+          <div class="text-sm opacity-70">ความชื้น</div>
+          <div class="text-4xl font-semibold"><span id="humid">—</span><span class="text-base ml-1">%</span></div>
+        </div>
+        <div class="rounded-2xl p-5 bg-white/70 dark:bg-slate-900/60 ring-1 ring-slate-900/5 dark:ring-white/10">
+          <div class="text-sm opacity-70">ลม</div>
+          <div class="text-4xl font-semibold"><span id="wind">—</span><span class="text-base ml-1">m/s</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rounded-2xl glass p-6 ring-1 ring-slate-900/5 dark:ring-white/10">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold">แนวโน้มย้อนหลัง</h3>
+        <div class="flex items-center gap-2">
+          <label class="text-sm opacity-80">ช่วงเวลา</label>
+          <select id="range" class="text-sm border rounded-lg px-3 py-1 bg-white/70 dark:bg-slate-900/60 border-slate-300 dark:border-slate-600">
+            <option value="24">24 ชั่วโมง</option>
+            <option value="48">48 ชั่วโมง</option>
+            <option value="72">72 ชั่วโมง</option>
+            <option value="168">7 วัน</option>
+          </select>
+        </div>
+      </div>
+      <div class="relative">
+        <canvas id="chart" height="120"></canvas>
+        <div id="loading" class="absolute inset-0 grid place-items-center text-sm opacity-80">กำลังโหลดข้อมูล…</div>
+      </div>
+    </section>
+
+    <footer class="py-8 text-center text-xs opacity-70">
+      ข้อมูลจาก <a class="underline" href="https://open-meteo.com/" target="_blank">Open‑Meteo</a> • สร้างด้วย Vercel/Netlify + Render + MongoDB Atlas
+    </footer>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
